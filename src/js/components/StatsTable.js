@@ -9,9 +9,10 @@ export default class StatsTable extends React.Component {
 		this.state = {
 			statsData: [],
 			lastRequest: this.props.endpoint,
-			isFirstCall: true
+			isFirstCall: true,
+			qKname: ''
 		};
-		this.getData();
+		this.getData = this.getData.bind(this);
 	}
 
 	getData() {
@@ -32,6 +33,35 @@ export default class StatsTable extends React.Component {
 		});
 	}
 
+	/*
+	searchKname(event) {
+		event.preventDefault();
+		console.log("Param is:" + param);
+		console.log("Query with:" + this.state.lastRequest);
+
+		this.getData();
+	}
+	*/
+
+	changeKname(event) {
+		var text = event.target.value;
+		this.setState({
+			qKname: text
+		});
+
+		console.log(text);
+
+		var param = '';
+		if (text.length !== 0) { 
+			param = 'with=kname|' + this.state.qKname;
+			this.setState({
+				lastRequest: this.props.endpoint + param
+			});
+		};
+
+		this.getData();
+	}
+
 	render() {
 		// map each object to a component
 		// var fragColumns = Object.keys(statsData[0]);
@@ -42,9 +72,16 @@ export default class StatsTable extends React.Component {
 		});
 
 		return (
-			<table className="table">
-				<tbody>{fragRows}</tbody>
-			</table>
+			<div>	
+				<h5>Search by value</h5>
+				<form>
+					Player Name:
+					<input onChange={this.changeKname.bind(this)} value={this.state.qKname} />
+				</form>
+				<table className="table">
+					<tbody>{fragRows}</tbody>
+				</table>
+			</div>
 		);
 	}
 }

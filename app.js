@@ -62,7 +62,7 @@
 
 	var app = document.getElementById('content');
 
-	_reactDom2.default.render(_react2.default.createElement(_StatsTable2.default, { endpoint: "http://api.diabolis.net" }), app);
+	_reactDom2.default.render(_react2.default.createElement(_StatsTable2.default, { endpoint: "http://api.diabolis.net/index.php?" }), app);
 
 /***/ },
 /* 1 */
@@ -21509,9 +21509,10 @@
 			_this.state = {
 				statsData: [],
 				lastRequest: _this.props.endpoint,
-				isFirstCall: true
+				isFirstCall: true,
+				qKname: ''
 			};
-			_this.getData();
+			_this.getData = _this.getData.bind(_this);
 			return _this;
 		}
 
@@ -21534,6 +21535,36 @@
 					}.bind(this)
 				});
 			}
+
+			/*
+	  searchKname(event) {
+	  	event.preventDefault();
+	  	console.log("Param is:" + param);
+	  	console.log("Query with:" + this.state.lastRequest);
+	  		this.getData();
+	  }
+	  */
+
+		}, {
+			key: "changeKname",
+			value: function changeKname(event) {
+				var text = event.target.value;
+				this.setState({
+					qKname: text
+				});
+
+				console.log(text);
+
+				var param = '';
+				if (text.length !== 0) {
+					param = 'with=kname|' + this.state.qKname;
+					this.setState({
+						lastRequest: this.props.endpoint + param
+					});
+				};
+
+				this.getData();
+			}
 		}, {
 			key: "render",
 			value: function render() {
@@ -21544,12 +21575,27 @@
 				});
 
 				return _react2.default.createElement(
-					"table",
-					{ className: "table" },
+					"div",
+					null,
 					_react2.default.createElement(
-						"tbody",
+						"h5",
 						null,
-						fragRows
+						"Search by value"
+					),
+					_react2.default.createElement(
+						"form",
+						null,
+						"Player Name:",
+						_react2.default.createElement("input", { onChange: this.changeKname.bind(this), value: this.state.qKname })
+					),
+					_react2.default.createElement(
+						"table",
+						{ className: "table" },
+						_react2.default.createElement(
+							"tbody",
+							null,
+							fragRows
+						)
 					)
 				);
 			}
