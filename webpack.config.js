@@ -1,3 +1,5 @@
+var webpack = require('webpack');
+
 module.exports = {
   entry: './src/js/entry.js',
   output: {
@@ -12,4 +14,14 @@ module.exports = {
         }
 	  ]
   }
+  //plugins: process.env.NODE_ENV === 'production' ? [
+  //  new webpack.DefinePlugin({
+  //    'process.env':{
+  //      'NODE_ENV': JSON.stringify('production')
+  //    }
+  //  }),
+  //  new webpack.optimize.DedupePlugin(),
+  //  new webpack.optimize.OccurrenceOrderPlugin(),
+  //  new webpack.optimize.UglifyJsPlugin()
+  //] : [],
 }

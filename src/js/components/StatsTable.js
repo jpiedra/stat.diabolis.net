@@ -13,12 +13,13 @@ export default class StatsTable extends React.Component {
 			qKname: ''
 		};
 		this.getData = this.getData.bind(this);
+		this.changeSearchKname = this.changeSearchKname.bind(this);
 	}
 
-	getData() {
+	getData(query) {
 		if (this.state.isFirstCall) this.state.isFirstCall = false;
 		$.ajax({
-			url: this.state.lastRequest,
+			url: query,
 			dataType: 'json',
 			crossDomain: true,
 			cache: false,
@@ -33,51 +34,32 @@ export default class StatsTable extends React.Component {
 		});
 	}
 
-	/*
-	searchKname(event) {
+	changeSearchKname(event) {
 		event.preventDefault();
-		console.log("Param is:" + param);
-		console.log("Query with:" + this.state.lastRequest);
-
-		this.getData();
-	}
-	*/
-
-	changeKname(event) {
-		var text = event.target.value;
 		this.setState({
-			qKname: text
+			qKname: event.target.value,
+			lastRequest: this.props.endpoint + 'with=kname|' + event.target.value
+		}, function() {
+			this.getData(this.state.lastRequest);
 		});
-
-		console.log(text);
-
-		var param = '';
-		if (text.length !== 0) { 
-			param = 'with=kname|' + this.state.qKname;
-			this.setState({
-				lastRequest: this.props.endpoint + param
-			});
-		};
-
-		this.getData();
 	}
 
 	render() {
 		// map each object to a component
 		// var fragColumns = Object.keys(statsData[0]);
-		var fragRows = this.state.statsData.map(function(entry){
+		var fragRows = this.state.statsData.map(function(entry, index){
 			return (
-				<StatsRow rowData={entry} />
+				<StatsRow rowData={entry} key={index}/>
 			);
 		});
 
 		return (
 			<div>	
-				<h5>Search by value</h5>
-				<form>
+				<div>
+					<h4>Search by value</h4>
 					Player Name:
-					<input onChange={this.changeKname.bind(this)} value={this.state.qKname} />
-				</form>
+					<input onChange={this.changeSearchKname} value={this.state.qKname} placeholder="Enter player name..." />
+				</div>
 				<table className="table">
 					<tbody>{fragRows}</tbody>
 				</table>
