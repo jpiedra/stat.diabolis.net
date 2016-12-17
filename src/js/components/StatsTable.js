@@ -33,6 +33,9 @@ export default class StatsTable extends React.Component {
 		$.ajax({
 			url: query,
 			dataType: 'json',
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest'
+			},
 			crossDomain: true,
 			cache: false,
 			success: function(data) {
